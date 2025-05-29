@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ToDoApp.Models.Todo>
+
+@{
+    ViewData["Title"] = "Todo List";
+}
+
+<h2>Todo List</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Todo</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var isOverdue = item.Deadline < DateTime.Now && !item.IsFinish;
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>
+                    <span style="color:@(isOverdue ? "red" : "inherit")">
+                        @item.Deadline.ToShortDateString()
+                    </span>
+                </td>
+                <td>
+                    @(item.IsFinish ? "✅ Done" : isOverdue ? "⏰ Overdue" : "🕒 Pending")
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
